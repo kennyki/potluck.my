@@ -1,6 +1,6 @@
 <template lang='pug'>
 q-page(padding)
-  h1.text-center.q-my-md {{ t('labels.welcome') }}
+  h1.text-h5.text-center.q-my-md {{ t('labels.tagline') }}
 </template>
 
 <script setup>

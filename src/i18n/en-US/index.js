@@ -7,7 +7,7 @@ export default {
   },
   labels: {
     loading: 'Loading...',
-    welcome: 'Welcome'
+    tagline: 'No fuss potluck organizing'
   },
   validations: {
     required: 'This field is required',

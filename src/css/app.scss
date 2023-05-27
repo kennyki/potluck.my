@@ -1,1 +1,13 @@
-// app global css in SCSS form
+@font-face {
+  font-family: 'Comfortaa';
+  src: url(./fonts/Comfortaa-VariableFont_wght.ttf);
+}
+
+// declare a class which applies it
+body {
+  font-family: 'Comfortaa', '-apple-system', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.logo {
+  max-height: 50px;
+}
