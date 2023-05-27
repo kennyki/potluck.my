@@ -9,5 +9,9 @@ q-layout(view='hHh lpR fFf')
           )
           img.logo(src='~assets/logo.png')
   q-page-container
-    router-view
+    .row
+      .col
+      .col-12.col-sm-6
+        router-view
+      .col
 </template>
