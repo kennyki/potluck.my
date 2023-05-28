@@ -31,6 +31,10 @@ export const useUserStore = defineStore('user', {
       await this.init()
       return this.update({ name })
     },
+    async logout () {
+      await account.deleteSession('current')
+      this.$reset()
+    },
     async update ({ name }) {
       if (name) {
         const updates = await account.updateName(name)

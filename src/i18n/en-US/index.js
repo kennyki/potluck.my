@@ -31,7 +31,12 @@ export default {
   labels: {
     description: 'Description',
     loading: 'Loading...',
-    name: 'Name'
+    name: 'Name',
+    no: 'No',
+    yes: 'Yes'
+  },
+  prompts: {
+    deleteProfile: 'This will delete your profile permanently. Are you sure?'
   },
   validations: {
     required: 'This field is required',

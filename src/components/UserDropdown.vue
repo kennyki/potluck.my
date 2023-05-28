@@ -16,20 +16,36 @@ q-btn(
         clickable
         @click='logout()'
         )
-        q-item-section(no-wrap) {{ t('actions.deleteProfile') }}
+        q-item-section.text-negative(no-wrap) {{ t('actions.deleteProfile') }}
 </template>
 
 <script setup>
+import { useQuasar } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import { useRouter } from 'vue-router'
+import { useLoading } from 'composables/loading'
 import { useUserStore } from 'stores/user'
 
+const $q = useQuasar()
 const { t } = useI18n()
+const loading = useLoading()
 const userStore = useUserStore()
 const router = useRouter()
 
-async function logout () {
-  await userStore.logout()
-  router.push({ name: 'home' })
+function logout () {
+  $q.dialog({
+    class: 'text-negative',
+    color: 'negative',
+    title: t('actions.deleteProfile'),
+    message: t('prompts.deleteProfile'),
+    ok: {
+      label: t('labels.yes'),
+      flat: false
+    },
+    cancel: t('labels.no')
+  }).onOk(async () => {
+    await loading.start(() => userStore.logout())
+    router.push({ name: 'home' })
+  })
 }
 </script>
