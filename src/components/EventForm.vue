@@ -3,6 +3,8 @@ q-form.q-gutter-sm(@submit='onSubmit()')
   q-input(
     v-model='state.name'
     :label='t("labels.name") + " *"'
+    :hint='t("descriptions.nameMaxLength", { n: nameMaxLength })'
+    hide-hint
     bottom-slots
     :error='v.name.$error'
     )
@@ -12,6 +14,7 @@ q-form.q-gutter-sm(@submit='onSubmit()')
     type='textarea'
     v-model='state.description'
     :label='t("labels.description")'
+    autogrow
     )
   .q-mt-lg
     q-btn(
@@ -28,7 +31,7 @@ q-form.q-gutter-sm(@submit='onSubmit()')
 
 <script setup>
 import { reactive } from 'vue'
-import { required } from 'validators'
+import { required, maxLength } from 'validators'
 import { useI18n } from 'vue-i18n'
 import useVuelidate from '@vuelidate/core'
 import ValidationMessages from 'components/ValidationMessages.vue'
@@ -41,12 +44,13 @@ const props = defineProps({
     default: () => ({})
   }
 })
+const nameMaxLength = 32
 const state = reactive({
   name: props.data.name || '',
   description: props.data.description || ''
 })
 const rules = {
-  name: { required }
+  name: { required, maxLength: maxLength(nameMaxLength) }
 }
 const v = useVuelidate(rules, state, {
   $autoDirty: true,

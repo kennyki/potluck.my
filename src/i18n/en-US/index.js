@@ -14,7 +14,7 @@ export default {
     requiresGuest: 'You already have a profile'
   },
   descriptions: {
-    profileNameLength: 'Max 32 characters'
+    nameMaxLength: 'Max {n} characters'
   },
   home: {
     tagline: 'Easy potluck organizing',

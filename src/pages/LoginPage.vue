@@ -9,7 +9,7 @@ q-card(
       q-input(
         v-model='state.name'
         :label='t("labels.name") + " *"'
-        :hint='t("descriptions.profileNameLength")'
+        :hint='t("descriptions.nameMaxLength", { n: nameMaxLength })'
         hide-hint
         bottom-slots
         :error='v.name.$error'
@@ -49,12 +49,12 @@ const props = defineProps({
     type: String
   }
 })
-
+const nameMaxLength = 32
 const state = reactive({
   name: ''
 })
 const rules = {
-  name: { required, maxLength: maxLength(32) }
+  name: { required, maxLength: maxLength(nameMaxLength) }
 }
 const v = useVuelidate(rules, state, {
   $autoDirty: true,

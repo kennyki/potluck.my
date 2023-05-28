@@ -13,6 +13,7 @@ q-card(
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import EventForm from 'components/EventForm.vue'
 
 const { t } = useI18n()
 
