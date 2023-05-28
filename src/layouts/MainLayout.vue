@@ -12,6 +12,13 @@ q-layout(view='hHh lpR fFf')
     .row
       .col
       .col-12.col-sm-6
-        router-view
+        q-page.q-pt-none(padding)
+          .flex.justify-end.q-mb-sm
+            UserDropdown
+          router-view
       .col
 </template>
+
+<script setup>
+import UserDropdown from 'components/UserDropdown.vue'
+</script>

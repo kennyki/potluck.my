@@ -1,10 +1,20 @@
 export default {
   actions: {
+    cancel: 'Cancel',
+    createEvent: 'Create event',
+    createProfile: 'Create profile',
+    deleteProfile: 'Delete profile',
     dismiss: 'Dismiss',
-    getStarted: 'Get started'
+    getStarted: 'Get started',
+    submit: 'Submit'
   },
   auth: {
-    initError: 'Unable to initialize user'
+    initError: 'Unable to initialize user',
+    requiresAuth: 'Please create your profile',
+    requiresGuest: 'You already have a profile'
+  },
+  descriptions: {
+    profileNameLength: 'Max 32 characters'
   },
   home: {
     tagline: 'Easy potluck organizing',
@@ -19,7 +29,9 @@ export default {
     step4: 'Work out who\'s bringing or doing what'
   },
   labels: {
-    loading: 'Loading...'
+    description: 'Description',
+    loading: 'Loading...',
+    name: 'Name'
   },
   validations: {
     required: 'This field is required',

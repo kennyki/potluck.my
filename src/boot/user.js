@@ -15,4 +15,20 @@ export default boot(async ({ app, router }) => {
     notify(t('auth.initError'))
     console.error(error)
   }
+
+  router.beforeEach(async (to, from) => {
+    const { requiresAuth } = to.meta
+    const { isLoggedIn } = userStore
+
+    if (requiresAuth && !isLoggedIn) {
+      notify(t('auth.requiresAuth'))
+      return {
+        name: 'login',
+        query: { redirect: window.location.href }
+      }
+    } else if (requiresAuth === false && isLoggedIn) {
+      notify(t('auth.requiresGuest'))
+      return { name: 'home' }
+    }
+  })
 })

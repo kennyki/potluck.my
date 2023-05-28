@@ -7,6 +7,22 @@ const routes = [
         name: 'home',
         path: '',
         component: () => import('pages/HomePage.vue')
+      },
+      {
+        name: 'login',
+        path: 'profile',
+        component: () => import('pages/LoginPage.vue'),
+        meta: {
+          requiresAuth: false
+        }
+      },
+      {
+        name: 'eventCreation',
+        path: 'events/new',
+        component: () => import('pages/EventCreationPage.vue'),
+        meta: {
+          requiresAuth: true
+        }
       }
     ]
   },
