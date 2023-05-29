@@ -14,7 +14,6 @@ export default {
     requiresGuest: 'You already have a profile'
   },
   descriptions: {
-    eventIdPattern: 'Only alphabets, numbers, and dash (-)',
     maxLength: 'Max {n} characters'
   },
   home: {
@@ -31,7 +30,6 @@ export default {
   },
   labels: {
     description: 'Description',
-    id: 'ID',
     loading: 'Loading...',
     name: 'Name',
     no: 'No',
