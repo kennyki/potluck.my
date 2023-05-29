@@ -9,10 +9,11 @@ q-layout(view='hHh lpR fFf')
           )
           img.logo(src='~assets/logo.png')
   q-page-container
+    q-separator
     .row
       .col
       .col-12.col-sm-6
-        q-page.q-pt-none(padding)
+        q-page(padding)
           .flex.justify-end.q-mb-sm
             UserDropdown
           router-view

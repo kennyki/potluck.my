@@ -15,3 +15,4 @@ export { helpers }
 export const required = helpers.withMessage(t('validations.required'), vRequired)
 export const maxLength = (max) => helpers.withMessage(t('validations.maxLength', max), vMaxLength(max))
 export const minLength = (min) => helpers.withMessage(t('validations.minLength', min), vMinLength(min))
+export const pattern = (regex, hint) => helpers.withMessage(t('validations.pattern', { hint }), helpers.regex(regex))

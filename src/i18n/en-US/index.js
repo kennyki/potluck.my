@@ -14,7 +14,8 @@ export default {
     requiresGuest: 'You already have a profile'
   },
   descriptions: {
-    nameMaxLength: 'Max {n} characters'
+    eventIdPattern: 'Only alphabets, numbers, and dash (-)',
+    maxLength: 'Max {n} characters'
   },
   home: {
     tagline: 'Easy potluck organizing',
@@ -30,6 +31,7 @@ export default {
   },
   labels: {
     description: 'Description',
+    id: 'ID',
     loading: 'Loading...',
     name: 'Name',
     no: 'No',
@@ -41,6 +43,7 @@ export default {
   validations: {
     required: 'This field is required',
     maxLength: 'This field allows at most {n} characters',
-    minLength: 'This field should be empty | This field requires at least {n} character | This field requires at least {n} characters'
+    minLength: 'This field should be empty | This field requires at least {n} character | This field requires at least {n} characters',
+    pattern: 'This field requires pattern: {hint}'
   }
 }

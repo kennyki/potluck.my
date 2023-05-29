@@ -9,7 +9,7 @@ q-card(
       q-input(
         v-model='state.name'
         :label='t("labels.name") + " *"'
-        :hint='t("descriptions.nameMaxLength", { n: nameMaxLength })'
+        :hint='t("descriptions.maxLength", { n: nameMaxLength })'
         hide-hint
         bottom-slots
         :error='v.name.$error'
