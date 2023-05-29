@@ -13,11 +13,26 @@ q-card(
 
 <script setup>
 import { useI18n } from 'vue-i18n'
+import { useEventStore } from 'stores/event'
+import { useLoading } from 'composables/loading'
+import { useRouter } from 'vue-router'
 import EventForm from 'components/EventForm.vue'
 
 const { t } = useI18n()
+const eventStore = useEventStore()
+const loading = useLoading()
+const router = useRouter()
 
-function onSubmit () {}
+async function onSubmit (params) {
+  const id = await loading.start(() => eventStore.create(params))
 
-function onCancel () {}
+  router.push({
+    name: 'eventView',
+    params: { id }
+  })
+}
+
+function onCancel () {
+  router.replace({ name: 'home' })
+}
 </script>
