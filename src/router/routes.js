@@ -23,6 +23,15 @@ const routes = [
         meta: {
           requiresAuth: true
         }
+      },
+      {
+        name: 'eventView',
+        path: 'events/:id',
+        component: () => import('pages/EventViewPage.vue'),
+        props: true,
+        meta: {
+          requiresAuth: true
+        }
       }
     ]
   },
