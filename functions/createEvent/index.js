@@ -46,33 +46,43 @@ module.exports = async (req, res) => {
       [
         Permission.read(Role.users()),
         Permission.create(Role.users()),
-        Permission.write(Role.user(host))
+        Permission.update(Role.user(host))
       ],
       true
     )
-    const collectionId = collection.$id
+    const eventId = collection.$id
 
     await Promise.all([
+      // ['metadata', 'notice', 'item']
       databases.createStringAttribute(
         dbId,
-        collectionId,
+        eventId,
         'type',
         STRING_XS,
         true
       ),
       databases.createStringAttribute(
         dbId,
-        collectionId,
+        eventId,
         'data',
         STRING_MAX,
         true
       ),
       databases.createStringAttribute(
         dbId,
-        collectionId,
+        eventId,
         'creator',
         STRING_MD,
         true
+      ),
+      // ['active', 'hidden']
+      databases.createStringAttribute(
+        dbId,
+        eventId,
+        'status',
+        STRING_XS,
+        false,
+        'active'
       )
     ])
     // TODO: how to better wait for the attributes to become 'available'
@@ -80,16 +90,16 @@ module.exports = async (req, res) => {
     await Promise.all([
       databases.createIndex(
         dbId,
-        collectionId,
-        'type',
+        eventId,
+        'status',
         'key',
-        ['type']
+        ['status']
       )
     ])
 
-    const event = await databases.createDocument(
+    await databases.createDocument(
       dbId,
-      collectionId,
+      eventId,
       ID.unique(),
       {
         type: 'metadata',
@@ -102,7 +112,7 @@ module.exports = async (req, res) => {
       ]
     )
 
-    res.json(event.$id)
+    res.json(eventId)
   } catch (error) {
     console.error(error)
     res.json(error, 500)
