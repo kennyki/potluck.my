@@ -145,16 +145,14 @@ export const useEventStore = defineStore('event', {
     _createDoc (listName, doc) {
       doc = this._parseDoc(doc)
 
-      if (doc) {
+      if (doc && doc.status === 'active') {
         this[listName].push(doc)
       }
     },
     _updateDoc (listName, updates) {
       const id = updates.$id
 
-      if (updates.status === 'hidden') {
-        this._deleteDoc(listName, updates)
-      } else {
+      if (updates.status === 'active') {
         const doc = this[listName].find(doc => doc.$id === id)
 
         updates = this._parseDoc(updates)
@@ -162,6 +160,9 @@ export const useEventStore = defineStore('event', {
         if (doc && updates) {
           Object.assign(doc, updates)
         }
+      } else {
+        // treat invalid status the same as 'delete'
+        this._deleteDoc(listName, updates)
       }
     },
     _deleteDoc (listName, doc) {
