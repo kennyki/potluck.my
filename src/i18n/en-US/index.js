@@ -2,6 +2,7 @@ export default {
   actions: {
     cancel: 'Cancel',
     createEvent: 'Create event',
+    createNotice: 'Create notice',
     createProfile: 'Create profile',
     deleteProfile: 'Delete profile',
     dismiss: 'Dismiss',
@@ -29,10 +30,12 @@ export default {
     step4: 'Work out who\'s bringing or doing what'
   },
   labels: {
+    content: 'Content',
     description: 'Description',
     loading: 'Loading...',
     name: 'Name',
     no: 'No',
+    notice: 'Notice',
     yes: 'Yes'
   },
   prompts: {
