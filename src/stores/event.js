@@ -6,6 +6,7 @@ import {
   Role
 } from 'appwrite'
 import {
+  client,
   databases,
   dbId,
   functions
@@ -17,11 +18,14 @@ const PAGE_LIMIT = 100
 
 export const useEventStore = defineStore('event', {
   state: () => ({
-    data: null
+    id: null,
+    metadata: null,
+    notices: [],
+    items: []
   }),
   getters: {
     isLoaded (state) {
-      return !!state.data
+      return !!state.id
     }
   },
   actions: {
@@ -37,9 +41,8 @@ export const useEventStore = defineStore('event', {
     async load ({ id, status = 'active' }) {
       // load everything
       const documents = await this._load({ id, status })
-      // map by type
-      // but we will only take the first for metadata
       const data = {
+        id,
         metadata: null,
         notices: [],
         items: []
@@ -51,6 +54,7 @@ export const useEventStore = defineStore('event', {
 
           switch (doc.type) {
             case 'metadata':
+              // only take the first for metadata
               data.metadata ||= doc
               break
             case 'notice':
@@ -66,7 +70,7 @@ export const useEventStore = defineStore('event', {
         }
       })
 
-      this.$patch({ data })
+      this.$patch(data)
     },
     async _load ({ id, status }, page = 1) {
       const offset = (page - 1) * PAGE_LIMIT
