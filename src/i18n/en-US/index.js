@@ -32,6 +32,7 @@ export default {
   labels: {
     content: 'Content',
     description: 'Description',
+    event: 'Event',
     loading: 'Loading...',
     name: 'Name',
     no: 'No',

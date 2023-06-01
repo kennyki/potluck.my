@@ -30,7 +30,7 @@ module.exports = async (req, res) => {
   const dbId = req.variables['DB_ID']
 
   try {
-    const { name, host } = JSON.parse(req.payload)
+    const { name, host, notice } = JSON.parse(req.payload)
 
     if (!name) {
       return res.json('Name is required', 400)
@@ -53,7 +53,7 @@ module.exports = async (req, res) => {
     const eventId = collection.$id
 
     await Promise.all([
-      // ['metadata', 'notice', 'item']
+      // ['metadata', 'item']
       databases.createStringAttribute(
         dbId,
         eventId,
@@ -103,7 +103,7 @@ module.exports = async (req, res) => {
       ID.unique(),
       {
         type: 'metadata',
-        data: JSON.stringify({ name, host }),
+        data: JSON.stringify({ name, host, notice }),
         creator: host
       },
       [

@@ -20,7 +20,6 @@ export const useEventStore = defineStore('event', {
   state: () => ({
     id: null,
     metadata: null,
-    notices: [],
     items: [],
     unsubscribeToEvent: null
   }),
@@ -30,43 +29,53 @@ export const useEventStore = defineStore('event', {
     }
   },
   actions: {
-    create ({ name }) {
+    create ({ name, notice }) {
       const userStore = useUserStore()
       const params = JSON.stringify({
         name,
+        notice,
         host: userStore.account.$id
       })
 
       return functions.createExecution('createEvent', params)
     },
-    createNotice ({ content }) {
-      const userStore = useUserStore()
-      const creator = userStore.account.$id
-      const host = this.metadata.data.host
+    updateMetadata ({ name, notice }) {
+      const updates = Object.assign({ ...this.metadata.data }, { name, notice })
 
-      return databases.createDocument(
+      return databases.updateDocument(
         dbId,
         this.id,
-        ID.unique(),
-        {
-          type: 'notice',
-          data: JSON.stringify({ content }),
-          creator
-        },
-        [
-          Permission.read(Role.users()),
-          Permission.update(Role.user(host)),
-          Permission.update(Role.user(creator))
-        ]
+        this.metadata.$id,
+        { data: JSON.stringify(updates) }
       )
     },
+    // createItem ({ content }) {
+    //   const userStore = useUserStore()
+    //   const creator = userStore.account.$id
+    //   const host = this.metadata.data.host
+    //
+    //   return databases.createDocument(
+    //     dbId,
+    //     this.id,
+    //     ID.unique(),
+    //     {
+    //       type: 'item',
+    //       data: JSON.stringify({ content }),
+    //       creator
+    //     },
+    //     [
+    //       Permission.read(Role.users()),
+    //       Permission.update(Role.user(host)),
+    //       Permission.update(Role.user(creator))
+    //     ]
+    //   )
+    // },
     async load ({ id, status = 'active' }) {
       // load everything
       const documents = await this._load({ id, status })
       const data = {
         id,
         metadata: null,
-        notices: [],
         items: [],
         unsubscribeToEvent: null
       }
@@ -82,9 +91,6 @@ export const useEventStore = defineStore('event', {
           case 'metadata':
             // only take the first for metadata
             data.metadata ||= doc
-            break
-          case 'notice':
-            data.notices.push(doc)
             break
           case 'item':
             data.items.push(doc)
@@ -126,7 +132,13 @@ export const useEventStore = defineStore('event', {
         // ignore 'create' or 'delete'
         // which definitely is not a proper change (from the app UI)
         if (type === 'metadata' && action === 'update') {
-          return Object.assign(this.metadata, payload)
+          const updates = this._parseDoc(payload)
+
+          if (updates) {
+            Object.assign(this.metadata, updates)
+          }
+
+          return
         }
 
         const listName = `${type}s`

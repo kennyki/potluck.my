@@ -10,6 +10,18 @@ q-form.q-gutter-sm(@submit='onSubmit()')
     )
     template(v-slot:error)
       ValidationMessages(:errors='v.name.$errors')
+  q-input(
+    type='textarea'
+    autogrow
+    v-model='state.notice'
+    :label='t("labels.notice")'
+    :hint='t("descriptions.maxLength", { n: noticeMaxLength })'
+    hide-hint
+    bottom-slots
+    :error='v.notice.$error'
+    )
+    template(v-slot:error)
+      ValidationMessages(:errors='v.notice.$errors')
   .q-mt-lg
     q-btn(
       type='submit'
@@ -39,11 +51,14 @@ const props = defineProps({
   }
 })
 const nameMaxLength = 128
+const noticeMaxLength = 1000
 const state = reactive({
-  name: props.data.name || ''
+  name: props.data.name || '',
+  notice: props.data.notice || ''
 })
 const rules = {
-  name: { required, maxLength: maxLength(nameMaxLength) }
+  name: { required, maxLength: maxLength(nameMaxLength) },
+  notice: { maxLength: maxLength(noticeMaxLength) }
 }
 const v = useVuelidate(rules, state, {
   $autoDirty: true,
