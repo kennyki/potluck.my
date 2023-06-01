@@ -13,7 +13,7 @@ div(v-if='eventStore.isLoaded')
         .q-ml-sm {{ eventStore.metadata.data.name }}
     template(v-if='eventStore.metadata.data.notice')
       q-separator
-      q-card-section.text-warning {{ eventStore.metadata.data.notice }}
+      q-card-section.text-grey-7 {{ eventStore.metadata.data.notice }}
     template(v-if='isHost')
       q-separator
       q-card-actions(align='right')

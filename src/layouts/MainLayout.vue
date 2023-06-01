@@ -1,6 +1,9 @@
 <template lang='pug'>
 q-layout(view='hHh lpR fFf')
-  q-header.bg-white.text-black.q-py-sm
+  q-header.bg-white.text-black.q-py-sm(
+    reveal
+    bordered
+    )
     q-toolbar.flex.justify-center
       q-toolbar-title(shrink)
         q-btn(
@@ -9,7 +12,6 @@ q-layout(view='hHh lpR fFf')
           )
           img.logo(src='~assets/logo.png')
   q-page-container
-    q-separator
     .row
       .col
       .col-12.col-sm-6
