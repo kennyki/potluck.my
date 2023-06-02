@@ -5,7 +5,7 @@ q-dialog(
   )
   q-card.q-dialog-plugin
     q-card-section.row.items-center
-      .text-h6 {{ t('actions.createNotice') }}
+      .text-h6 {{ t('actions.createItem') }}
       q-space
       q-btn(
         icon='close'
@@ -15,7 +15,7 @@ q-dialog(
         v-close-popup
         )
     q-card-section
-      NoticeForm(
+      ItemForm(
         @submit='onSubmit($event)'
         @cancel='onDialogHide()'
         )
@@ -26,7 +26,7 @@ import { useDialogPluginComponent } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import { useEventStore } from 'stores/event'
 import { useLoading } from 'composables/loading'
-import NoticeForm from 'components/NoticeForm.vue'
+import ItemForm from 'components/ItemForm.vue'
 
 defineEmits([
   ...useDialogPluginComponent.emits
@@ -38,7 +38,7 @@ const eventStore = useEventStore()
 const loading = useLoading()
 
 async function onSubmit (params) {
-  const result = await loading.start(() => eventStore.createNotice(params))
+  const result = await loading.start(() => eventStore.createItem(params))
 
   onDialogOK(result)
 }

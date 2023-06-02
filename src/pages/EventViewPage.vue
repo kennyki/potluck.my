@@ -22,19 +22,33 @@ div(v-if='eventStore.isLoaded')
           icon='edit'
           @click='editEvent()'
           )
-  //- .q-my-md.q-gutter-sm(v-if='eventStore.items.length')
-  //-   q-banner.text-warning(
-  //-     v-for='item in eventStore.items'
-  //-     :key='item.$id'
-  //-     dense
-  //-     rounded
-  //-     ) {{ item.data.content }}
-  //- .flex.justify-center
-  //-   q-btn(
-  //-     push
-  //-     :label='t("actions.createItem")'
-  //-     @click='createItem()'
-  //-     )
+  template(v-if='eventStore.items.length')
+    h6.q-mb-sm.text-center Items
+    q-list(
+      bordered
+      separator
+    )
+      q-item(
+        v-for='item in eventStore.items'
+        :key='item.$id'
+        tag='label'
+        v-ripple
+        )
+        q-item-section
+          q-item-label {{ item.data.content }}
+          q-item-label(caption) {{ item.creator }}
+        q-item-section(
+          side
+          top
+        )
+          q-checkbox(v-model='item.data.taker')
+  .q-mt-md.flex.justify-center
+    q-btn(
+      push
+      no-caps
+      :label='t("actions.createItem")'
+      @click='createItem()'
+      )
 </template>
 
 <script setup>
@@ -45,7 +59,7 @@ import { useUserStore } from 'stores/user'
 import { useLoading } from 'composables/loading'
 import { useQuasar } from 'quasar'
 import EventEditDialog from 'components/EventEditDialog.vue'
-// import ItemCreationDialog from 'components/ItemCreationDialog.vue'
+import ItemCreationDialog from 'components/ItemCreationDialog.vue'
 
 const $q = useQuasar()
 const { t } = useI18n()
@@ -74,9 +88,9 @@ function editEvent () {
   })
 }
 
-// function createItem () {
-//   $q.dialog({
-//     component: ItemCreationDialog
-//   })
-// }
+function createItem () {
+  $q.dialog({
+    component: ItemCreationDialog
+  })
+}
 </script>

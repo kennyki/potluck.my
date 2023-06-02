@@ -2,7 +2,7 @@ export default {
   actions: {
     cancel: 'Cancel',
     createEvent: 'Create event',
-    createNotice: 'Create notice',
+    createItem: 'Create item',
     createProfile: 'Create profile',
     deleteProfile: 'Delete profile',
     dismiss: 'Dismiss',

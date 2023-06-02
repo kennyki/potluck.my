@@ -49,27 +49,27 @@ export const useEventStore = defineStore('event', {
         { data: JSON.stringify(updates) }
       )
     },
-    // createItem ({ content }) {
-    //   const userStore = useUserStore()
-    //   const creator = userStore.accountId
-    //   const host = this.metadata.data.host
-    //
-    //   return databases.createDocument(
-    //     dbId,
-    //     this.id,
-    //     ID.unique(),
-    //     {
-    //       type: 'item',
-    //       data: JSON.stringify({ content }),
-    //       creator
-    //     },
-    //     [
-    //       Permission.read(Role.users()),
-    //       Permission.update(Role.user(host)),
-    //       Permission.update(Role.user(creator))
-    //     ]
-    //   )
-    // },
+    createItem ({ content }) {
+      const userStore = useUserStore()
+      const creator = userStore.accountId
+      const host = this.metadata.data.host
+
+      return databases.createDocument(
+        dbId,
+        this.id,
+        ID.unique(),
+        {
+          type: 'item',
+          data: JSON.stringify({ content, taker: null }),
+          creator
+        },
+        [
+          Permission.read(Role.users()),
+          Permission.update(Role.user(host)),
+          Permission.update(Role.user(creator))
+        ]
+      )
+    },
     async load ({ id, status = 'active' }) {
       // load everything
       const documents = await this._load({ id, status })
