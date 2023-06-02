@@ -60,7 +60,7 @@ const props = defineProps({
   }
 })
 
-const isHost = computed(() => eventStore.metadata?.data?.host === userStore.account.$id)
+const isHost = computed(() => eventStore.metadata?.data?.host === userStore.accountId)
 
 onMounted(() => loading.start(() => eventStore.load({ id: props.id })))
 onUnmounted(() => eventStore.unload())

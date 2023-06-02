@@ -34,7 +34,7 @@ export const useEventStore = defineStore('event', {
       const params = JSON.stringify({
         name,
         notice,
-        host: userStore.account.$id
+        host: userStore.accountId
       })
 
       return functions.createExecution('createEvent', params)
@@ -51,7 +51,7 @@ export const useEventStore = defineStore('event', {
     },
     // createItem ({ content }) {
     //   const userStore = useUserStore()
-    //   const creator = userStore.account.$id
+    //   const creator = userStore.accountId
     //   const host = this.metadata.data.host
     //
     //   return databases.createDocument(

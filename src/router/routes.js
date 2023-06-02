@@ -12,6 +12,7 @@ const routes = [
         name: 'login',
         path: 'profile',
         component: () => import('pages/LoginPage.vue'),
+        props: route => route.query,
         meta: {
           requiresAuth: false
         }

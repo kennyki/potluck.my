@@ -45,7 +45,7 @@ function logout () {
     cancel: t('labels.no')
   }).onOk(async () => {
     await loading.start(() => userStore.logout())
-    router.push({ name: 'home' })
+    router.replace({ name: 'home' })
   })
 }
 </script>
