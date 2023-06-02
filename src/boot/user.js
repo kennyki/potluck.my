@@ -24,7 +24,7 @@ export default boot(async ({ app, router }) => {
       notify(t('auth.requiresAuth'))
       return {
         name: 'login',
-        query: { redirect: window.location.href }
+        query: { redirect: to.href }
       }
     } else if (requiresAuth === false && isLoggedIn) {
       notify(t('auth.requiresGuest'))
