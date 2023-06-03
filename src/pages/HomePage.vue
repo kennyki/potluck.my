@@ -25,6 +25,8 @@ q-card.q-my-lg(
         li {{ t('home.step4') }}
 .flex.justify-center
   q-btn(
+    push
+    no-caps
     color='primary'
     :label='t("actions.getStarted")'
     :to='{ name: "eventCreation" }'

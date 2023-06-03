@@ -5,7 +5,7 @@ q-dialog(
   )
   q-card.q-dialog-plugin
     q-card-section.row.items-center
-      .text-h6 {{ t('actions.createItem') }}
+      .text-h6 {{ t('actions.add') }}
       q-space
       q-btn(
         icon='close'

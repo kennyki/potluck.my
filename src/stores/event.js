@@ -50,7 +50,7 @@ export const useEventStore = defineStore('event', {
         { data: JSON.stringify(updates) }
       )
     },
-    createItem ({ content }) {
+    createItem ({ title }) {
       const userStore = useUserStore()
       const creatorId = userStore.id
       const hostId = this.metadata.creatorId
@@ -61,7 +61,7 @@ export const useEventStore = defineStore('event', {
         ID.unique(),
         {
           type: 'item',
-          data: JSON.stringify({ content }),
+          data: JSON.stringify({ title }),
           creatorId,
           creatorName: userStore.name
         },

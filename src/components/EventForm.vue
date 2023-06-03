@@ -25,11 +25,15 @@ q-form.q-gutter-sm(@submit='onSubmit()')
   .q-mt-lg
     q-btn(
       type='submit'
+      push
+      no-caps
       color='primary'
       :label='t("actions.submit")'
       )
     q-btn.q-ml-sm(
       type='button'
+      push
+      no-caps
       :label='t("actions.cancel")'
       @click='$emit("cancel")'
       )

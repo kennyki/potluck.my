@@ -1,21 +1,25 @@
 <template lang='pug'>
 q-form.q-gutter-sm(@submit='onSubmit()')
   q-input(
-    v-model='state.content'
-    :label='t("labels.content") + " *"'
+    v-model='state.title'
+    :label='t("labels.itemTitle") + " *"'
     bottom-slots
-    :error='v.content.$error'
+    :error='v.title.$error'
     )
     template(v-slot:error)
-      ValidationMessages(:errors='v.content.$errors')
+      ValidationMessages(:errors='v.title.$errors')
   .q-mt-lg
     q-btn(
       type='submit'
+      push
+      no-caps
       color='primary'
       :label='t("actions.submit")'
       )
     q-btn.q-ml-sm(
       type='button'
+      push
+      no-caps
       :label='t("actions.cancel")'
       @click='$emit("cancel")'
       )
@@ -37,10 +41,10 @@ const props = defineProps({
   }
 })
 const state = reactive({
-  content: props.data.content || ''
+  title: props.data.title || ''
 })
 const rules = {
-  content: { required }
+  title: { required }
 }
 const v = useVuelidate(rules, state, {
   $autoDirty: true,

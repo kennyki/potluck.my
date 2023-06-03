@@ -1,8 +1,8 @@
 export default {
   actions: {
+    add: 'Add',
     cancel: 'Cancel',
     createEvent: 'Create event',
-    createItem: 'Create item',
     createProfile: 'Create profile',
     deleteProfile: 'Delete profile',
     dismiss: 'Dismiss',
@@ -33,6 +33,7 @@ export default {
     content: 'Content',
     description: 'Description',
     event: 'Event',
+    itemTitle: 'To bring / To do',
     loading: 'Loading...',
     name: 'Name',
     no: 'No',

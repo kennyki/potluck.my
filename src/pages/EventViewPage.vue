@@ -5,46 +5,54 @@ div(v-if='eventStore.isLoaded')
     bordered
     )
     q-card-section
-      h1.text-h5.q-my-none.flex.no-wrap
+      h1.text-h5.q-mt-none.q-mb-sm.flex.no-wrap
         q-icon.text-primary(
           name='event'
-          size='lg'
+          size='md'
           )
         .q-ml-sm {{ eventStore.metadata.data.name }}
+      .flex.items-end.justify-between
+        .flex.items-center.text-caption.text-grey
+          q-icon(name='person')
+          .q-ml-xs {{ eventStore.metadata.creatorName }}
+        div(v-if='isHost')
+          q-btn(
+            round
+            flat
+            icon='edit'
+            size='sm'
+            @click='editEvent()'
+            )
     template(v-if='eventStore.metadata.data.notice')
       q-separator
       q-card-section.text-grey-7 {{ eventStore.metadata.data.notice }}
-    template(v-if='isHost')
-      q-separator
-      q-card-actions(align='right')
-        q-btn(
-          flat
-          icon='edit'
-          @click='editEvent()'
-          )
-  template(v-if='eventStore.items.length')
-    h6.q-mb-sm.text-center Items
-    q-list(
-      bordered
-      separator
-    )
-      q-item(
-        v-for='item in eventStore.items'
-        :key='item.$id'
-        tag='label'
-        )
-        q-item-section
-          q-item-label {{ item.data.content }}
-          q-item-label(caption) {{ item.creatorName }}
-        q-item-section(
-          side
-          top
-        )
-  .q-mt-md.flex.justify-center
+  h6.q-mb-sm {{ t('labels.itemTitle') }}
+  q-list.bg-grey-2(
+    v-if='eventStore.items.length'
+    bordered
+    separator
+  )
+    q-item(
+      v-for='item in eventStore.items'
+      :key='item.$id'
+      :clickable='false'
+      )
+      q-item-section
+        q-item-label {{ item.data.title }}
+        q-item-label
+          .flex.items-center.text-caption.text-grey
+            q-icon(name='person')
+            .q-ml-xs {{ item.creatorName }}
+      q-item-section(
+        side
+        top
+      )
+  .q-mt-md
     q-btn(
       push
       no-caps
-      :label='t("actions.createItem")'
+      color='primary'
+      :label='t("actions.add")'
       @click='createItem()'
       )
 </template>
