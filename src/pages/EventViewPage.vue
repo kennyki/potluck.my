@@ -32,16 +32,14 @@ div(v-if='eventStore.isLoaded')
         v-for='item in eventStore.items'
         :key='item.$id'
         tag='label'
-        v-ripple
         )
         q-item-section
           q-item-label {{ item.data.content }}
-          q-item-label(caption) {{ item.creator }}
+          q-item-label(caption) {{ item.creatorName }}
         q-item-section(
           side
           top
         )
-          q-checkbox(v-model='item.data.taker')
   .q-mt-md.flex.justify-center
     q-btn(
       push
@@ -74,7 +72,7 @@ const props = defineProps({
   }
 })
 
-const isHost = computed(() => eventStore.metadata?.data?.host === userStore.accountId)
+const isHost = computed(() => eventStore.metadata?.creatorId === userStore.id)
 
 onMounted(() => loading.start(() => eventStore.load({ id: props.id })))
 onUnmounted(() => eventStore.unload())

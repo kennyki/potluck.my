@@ -34,7 +34,8 @@ export const useEventStore = defineStore('event', {
       const params = JSON.stringify({
         name,
         notice,
-        host: userStore.accountId
+        hostId: userStore.id,
+        hostName: userStore.name
       })
 
       return functions.createExecution('createEvent', params)
@@ -51,8 +52,8 @@ export const useEventStore = defineStore('event', {
     },
     createItem ({ content }) {
       const userStore = useUserStore()
-      const creator = userStore.accountId
-      const host = this.metadata.data.host
+      const creatorId = userStore.id
+      const hostId = this.metadata.creatorId
 
       return databases.createDocument(
         dbId,
@@ -60,13 +61,14 @@ export const useEventStore = defineStore('event', {
         ID.unique(),
         {
           type: 'item',
-          data: JSON.stringify({ content, taker: null }),
-          creator
+          data: JSON.stringify({ content }),
+          creatorId,
+          creatorName: userStore.name
         },
         [
           Permission.read(Role.users()),
-          Permission.update(Role.user(host)),
-          Permission.update(Role.user(creator))
+          Permission.update(Role.user(hostId)),
+          Permission.update(Role.user(creatorId))
         ]
       )
     },

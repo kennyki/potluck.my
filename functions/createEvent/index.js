@@ -30,23 +30,23 @@ module.exports = async (req, res) => {
   const dbId = req.variables['DB_ID']
 
   try {
-    const { name, host, notice } = JSON.parse(req.payload)
+    const { name, hostId, hostName, notice } = JSON.parse(req.payload)
 
     if (!name) {
       return res.json('Name is required', 400)
-    } else if (!host) {
-      return res.json('Host is required', 400)
+    } else if (!hostId || !hostName) {
+      return res.json('Host ID and name are required', 400)
     }
 
     // TODO: transaction
     const collection = await databases.createCollection(
       dbId,
       ID.unique(),
-      `${host}-${Date.now()}`,
+      `${hostId}-${Date.now()}`,
       [
         Permission.read(Role.users()),
         Permission.create(Role.users()),
-        Permission.update(Role.user(host))
+        Permission.update(Role.user(hostId))
       ],
       true
     )
@@ -71,8 +71,15 @@ module.exports = async (req, res) => {
       databases.createStringAttribute(
         dbId,
         eventId,
-        'creator',
-        STRING_MD,
+        'creatorId',
+        STRING_SM,
+        true
+      ),
+      databases.createStringAttribute(
+        dbId,
+        eventId,
+        'creatorName',
+        STRING_SM,
         true
       ),
       // ['active', 'hidden']
@@ -103,12 +110,13 @@ module.exports = async (req, res) => {
       ID.unique(),
       {
         type: 'metadata',
-        data: JSON.stringify({ name, host, notice }),
-        creator: host
+        data: JSON.stringify({ name, notice }),
+        creatorId: hostId,
+        creatorName: hostName
       },
       [
         Permission.read(Role.users()),
-        Permission.update(Role.user(host))
+        Permission.update(Role.user(hostId))
       ]
     )
 
