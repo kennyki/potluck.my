@@ -68,7 +68,8 @@ export const useEventStore = defineStore('event', {
         [
           Permission.read(Role.users()),
           Permission.update(Role.user(hostId)),
-          Permission.update(Role.user(creatorId))
+          Permission.update(Role.user(creatorId)),
+          Permission.delete(Role.user(creatorId))
         ]
       )
     },
@@ -80,6 +81,13 @@ export const useEventStore = defineStore('event', {
         this.id,
         item.$id,
         { data: JSON.stringify(data) }
+      )
+    },
+    deleteItem (item) {
+      return databases.deleteDocument(
+        dbId,
+        this.id,
+        item.$id
       )
     },
     async load ({ id, status = 'active' }) {

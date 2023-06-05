@@ -4,6 +4,7 @@ export default {
     cancel: 'Cancel',
     createEvent: 'Create event',
     createProfile: 'Create profile',
+    delete: 'Delete',
     deleteProfile: 'Delete profile',
     dismiss: 'Dismiss',
     edit: 'Edit',
@@ -42,6 +43,7 @@ export default {
     yes: 'Yes'
   },
   prompts: {
+    deleteItem: 'This will delete "{item}" permanently. Are you sure?',
     deleteProfile: 'This will delete your profile permanently. Are you sure?'
   },
   validations: {

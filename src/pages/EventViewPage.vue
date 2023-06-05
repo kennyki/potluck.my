@@ -47,14 +47,21 @@ div(v-if='eventStore.isLoaded')
         side
         top
       )
-        q-btn(
-          v-if='item.creatorId === userStore.id'
-          round
-          flat
-          icon='edit'
-          size='sm'
-          @click='editItem(item)'
-          )
+        template(v-if='item.creatorId === userStore.id')
+          q-btn(
+            round
+            flat
+            icon='edit'
+            size='sm'
+            @click='editItem(item)'
+            )
+          q-btn(
+            round
+            flat
+            icon='delete'
+            size='sm'
+            @click='deleteItem(item)'
+            )
   .q-mt-md
     q-btn(
       push
@@ -116,6 +123,22 @@ function editItem (item) {
     componentProps: { data: item.data }
   }).onOk(params => {
     loading.start(() => eventStore.updateItem(item, params))
+  })
+}
+
+function deleteItem (item) {
+  $q.dialog({
+    class: 'text-negative',
+    color: 'negative',
+    title: t('actions.delete'),
+    message: t('prompts.deleteItem', { item: item.data.title }),
+    ok: {
+      label: t('labels.yes'),
+      flat: false
+    },
+    cancel: t('labels.no')
+  }).onOk(async () => {
+    loading.start(() => eventStore.deleteItem(item))
   })
 }
 </script>
