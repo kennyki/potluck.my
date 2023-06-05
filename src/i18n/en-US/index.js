@@ -6,6 +6,7 @@ export default {
     createProfile: 'Create profile',
     deleteProfile: 'Delete profile',
     dismiss: 'Dismiss',
+    edit: 'Edit',
     getStarted: 'Get started',
     submit: 'Submit'
   },

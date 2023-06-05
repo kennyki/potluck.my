@@ -5,7 +5,7 @@ q-dialog(
   )
   q-card.q-dialog-plugin
     q-card-section.row.items-center
-      .text-h6 {{ t('actions.add') }}
+      .text-h6 {{ title }}
       q-space
       q-btn(
         icon='close'
@@ -16,7 +16,8 @@ q-dialog(
         )
     q-card-section
       ItemForm(
-        @submit='onSubmit($event)'
+        :data='data'
+        @submit='onDialogOK($event)'
         @cancel='onDialogHide()'
         )
 </template>
@@ -24,22 +25,20 @@ q-dialog(
 <script setup>
 import { useDialogPluginComponent } from 'quasar'
 import { useI18n } from 'vue-i18n'
-import { useEventStore } from 'stores/event'
-import { useLoading } from 'composables/loading'
 import ItemForm from 'components/ItemForm.vue'
 
 defineEmits([
   ...useDialogPluginComponent.emits
 ])
 
+const props = defineProps({
+  data: {
+    type: Object
+  }
+})
+
 const { dialogRef, onDialogHide, onDialogOK } = useDialogPluginComponent()
 const { t } = useI18n()
-const eventStore = useEventStore()
-const loading = useLoading()
 
-async function onSubmit (params) {
-  const result = await loading.start(() => eventStore.createItem(params))
-
-  onDialogOK(result)
-}
+const title = props.data ? t('actions.edit') : t('actions.add')
 </script>

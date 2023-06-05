@@ -41,13 +41,13 @@ export const useEventStore = defineStore('event', {
       return functions.createExecution('createEvent', params)
     },
     updateMetadata ({ name, notice }) {
-      const updates = Object.assign({ ...this.metadata.data }, { name, notice })
+      const data = Object.assign({ ...this.metadata.data }, { name, notice })
 
       return databases.updateDocument(
         dbId,
         this.id,
         this.metadata.$id,
-        { data: JSON.stringify(updates) }
+        { data: JSON.stringify(data) }
       )
     },
     createItem ({ title }) {
@@ -70,6 +70,16 @@ export const useEventStore = defineStore('event', {
           Permission.update(Role.user(hostId)),
           Permission.update(Role.user(creatorId))
         ]
+      )
+    },
+    updateItem (item, { title }) {
+      const data = Object.assign({ ...item.data }, { title })
+
+      return databases.updateDocument(
+        dbId,
+        this.id,
+        item.$id,
+        { data: JSON.stringify(data) }
       )
     },
     async load ({ id, status = 'active' }) {

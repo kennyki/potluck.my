@@ -47,6 +47,14 @@ div(v-if='eventStore.isLoaded')
         side
         top
       )
+        q-btn(
+          v-if='item.creatorId === userStore.id'
+          round
+          flat
+          icon='edit'
+          size='sm'
+          @click='editItem(item)'
+          )
   .q-mt-md
     q-btn(
       push
@@ -65,7 +73,7 @@ import { useUserStore } from 'stores/user'
 import { useLoading } from 'composables/loading'
 import { useQuasar } from 'quasar'
 import EventEditDialog from 'components/EventEditDialog.vue'
-import ItemCreationDialog from 'components/ItemCreationDialog.vue'
+import ItemFormDialog from 'components/ItemFormDialog.vue'
 
 const $q = useQuasar()
 const { t } = useI18n()
@@ -96,7 +104,18 @@ function editEvent () {
 
 function createItem () {
   $q.dialog({
-    component: ItemCreationDialog
+    component: ItemFormDialog
+  }).onOk(params => {
+    loading.start(() => eventStore.createItem(params))
+  })
+}
+
+function editItem (item) {
+  $q.dialog({
+    component: ItemFormDialog,
+    componentProps: { data: item.data }
+  }).onOk(params => {
+    loading.start(() => eventStore.updateItem(item, params))
   })
 }
 </script>
