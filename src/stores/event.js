@@ -66,8 +66,6 @@ export const useEventStore = defineStore('event', {
           creatorName: userStore.name
         },
         [
-          Permission.read(Role.users()),
-          Permission.update(Role.user(hostId)),
           Permission.update(Role.user(creatorId)),
           Permission.delete(Role.user(creatorId))
         ]
