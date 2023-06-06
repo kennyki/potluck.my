@@ -25,8 +25,28 @@ div(v-if='eventStore.isLoaded')
             )
     template(v-if='eventStore.metadata.data.notice')
       q-separator
-      q-card-section.text-grey-7 {{ eventStore.metadata.data.notice }}
-  h6.q-mb-sm {{ t('labels.itemTitle') }}
+      q-card-section {{ eventStore.metadata.data.notice }}
+  .flex.justify-between.q-mt-xl.q-mb-sm
+    h6.q-my-none {{ t('labels.itemTitle') }}
+    q-btn(
+      flat
+      no-caps
+      color='grey-7'
+      )
+      .q-pl-xs {{ statusOptions[status] }}
+      q-icon(
+        name='arrow_drop_down'
+        size='xs'
+        )
+      q-menu(auto-close)
+        q-list
+          q-item(
+            v-for='(label, toStatus) in statusOptions'
+            :key='toStatus'
+            clickable
+            @click='status = toStatus'
+            )
+            q-item-section {{ label }}
   q-list(
     v-if='items.length'
     bordered
@@ -36,7 +56,7 @@ div(v-if='eventStore.isLoaded')
       v-for='item in items'
       :key='item.$id'
       :clickable='false'
-      :class='{ "bg-grey-1 text-grey-6": item.status !== "active" }'
+      :class='{ "bg-grey-1 text-grey-6": item.status !== ItemStatus.active }'
       )
       q-item-section
         q-item-label {{ item.data.title }}
@@ -49,7 +69,7 @@ div(v-if='eventStore.isLoaded')
         top
       )
         template(v-if='item.creatorId === userStore.id')
-          template(v-if='item.status === "active"')
+          template(v-if='item.status === ItemStatus.active')
             q-btn(
               round
               flat
@@ -93,7 +113,7 @@ div(v-if='eventStore.isLoaded')
 <script setup>
 import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useEventStore } from 'stores/event'
+import { useEventStore, ItemStatus } from 'stores/event'
 import { useUserStore } from 'stores/user'
 import { useLoading } from 'composables/loading'
 import { useQuasar } from 'quasar'
@@ -113,10 +133,14 @@ const props = defineProps({
   }
 })
 
-const status = ref('active')
+const status = ref(ItemStatus.active)
+const statusOptions = Object.keys(ItemStatus).reduce((map, key) => {
+  map[key] = t(`statuses.${key}`)
+  return map
+}, {})
 
 const isHost = computed(() => eventStore.metadata?.creatorId === userStore.id)
-const items = computed(() => eventStore.items.filter(item => item.status === status.value || item.creatorId === userStore.id))
+const items = computed(() => eventStore.items.filter(item => item.status === status.value))
 
 onMounted(() => loading.start(() => eventStore.load({ id: props.id })))
 onUnmounted(() => eventStore.unload())

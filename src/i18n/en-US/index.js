@@ -49,6 +49,10 @@ export default {
     deleteProfile: 'This will delete your profile permanently. Are you sure?',
     rejectItem: 'Reject "{item}" added by {name}? This will hide it from the list.'
   },
+  statuses: {
+    active: 'Active',
+    rejected: 'Rejected'
+  },
   validations: {
     required: 'This field is required',
     maxLength: 'This field allows at most {n} characters',

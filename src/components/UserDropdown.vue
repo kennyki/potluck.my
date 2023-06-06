@@ -8,7 +8,7 @@ q-btn(
   .q-pl-xs {{ userStore.account.name }}
   q-icon(
     name='arrow_drop_down'
-    size='16px'
+    size='xs'
     )
   q-menu(auto-close)
     q-list

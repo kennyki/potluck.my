@@ -16,6 +16,11 @@ import { useUserStore } from 'stores/user'
 // TODO: change to 999999 when Appwrite Cloud is updated to >= 1.3
 const PAGE_LIMIT = 100
 
+export const ItemStatus = {
+  active: 'active',
+  rejected: 'rejected'
+}
+
 export const useEventStore = defineStore('event', {
   state: () => ({
     id: null,
@@ -93,10 +98,10 @@ export const useEventStore = defineStore('event', {
         dbId,
         this.id,
         item.$id,
-        { status: 'rejected' }
+        { status: ItemStatus.rejected }
       )
     },
-    async load ({ id, status = 'active' }) {
+    async load ({ id, status = ItemStatus.active }) {
       // load everything
       const documents = await this._load({ id, status })
       const data = {
@@ -182,14 +187,14 @@ export const useEventStore = defineStore('event', {
     _createDoc (listName, doc) {
       doc = this._parseDoc(doc)
 
-      if (doc && doc.status === 'active') {
+      if (doc && doc.status === ItemStatus.active) {
         this[listName].push(doc)
       }
     },
     _updateDoc (listName, updates) {
       const id = updates.$id
 
-      if (updates.status === 'active') {
+      if (updates.status === ItemStatus.active) {
         const doc = this[listName].find(doc => doc.$id === id)
 
         updates = this._parseDoc(updates)
