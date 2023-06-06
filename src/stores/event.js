@@ -101,6 +101,14 @@ export const useEventStore = defineStore('event', {
         { status: ItemStatus.rejected }
       )
     },
+    acceptItem (item) {
+      return databases.updateDocument(
+        dbId,
+        this.id,
+        item.$id,
+        { status: ItemStatus.active }
+      )
+    },
     async load ({ id, status = ItemStatus.active }) {
       // load everything
       const documents = await this._load({ id, status })
@@ -193,18 +201,12 @@ export const useEventStore = defineStore('event', {
     },
     _updateDoc (listName, updates) {
       const id = updates.$id
+      const doc = this[listName].find(doc => doc.$id === id)
 
-      if (updates.status === ItemStatus.active) {
-        const doc = this[listName].find(doc => doc.$id === id)
+      updates = this._parseDoc(updates)
 
-        updates = this._parseDoc(updates)
-
-        if (doc && updates) {
-          Object.assign(doc, updates)
-        }
-      } else {
-        // treat invalid status the same as 'delete'
-        this._deleteDoc(listName, updates)
+      if (doc && updates) {
+        Object.assign(doc, updates)
       }
     },
     _deleteDoc (listName, doc) {

@@ -68,39 +68,39 @@ div(v-if='eventStore.isLoaded')
         side
         top
       )
-        template(v-if='item.creatorId === userStore.id')
-          template(v-if='item.status === ItemStatus.active')
-            q-btn(
-              round
-              flat
-              icon='edit'
-              size='sm'
-              @click='editItem(item)'
-              )
-            q-btn(
-              round
-              flat
-              icon='delete'
-              size='sm'
-              @click='deleteItem(item)'
-              )
-          q-btn.disabled(
-            v-else
+        template(v-if='item.creatorId === userStore.id && item.status === ItemStatus.active')
+          q-btn(
+            round
+            flat
+            icon='edit'
+            size='sm'
+            @click='editItem(item)'
+            )
+          q-btn(
+            round
+            flat
+            icon='delete'
+            size='sm'
+            @click='deleteItem(item)'
+            )
+        template(v-else-if='isHost')
+          q-btn(
+            v-if='item.status === ItemStatus.active'
             round
             flat
             icon='block'
             size='sm'
+            @click='rejectItem(item)'
+            )
+          q-btn(
+            v-else
+            round
+            flat
+            icon='check_circle'
+            size='sm'
+            @click='acceptItem(item)'
           )
-            q-tooltip {{ t('descriptions.rejected') }}
-        q-btn(
-          v-else-if='isHost'
-          round
-          flat
-          icon='block'
-          size='sm'
-          @click='rejectItem(item)'
-          )
-  .q-mt-md
+  .q-mt-md(v-if='status === ItemStatus.active')
     q-btn(
       push
       no-caps
@@ -200,6 +200,20 @@ function rejectItem (item) {
     cancel: t('labels.no')
   }).onOk(async () => {
     loading.start(() => eventStore.rejectItem(item))
+  })
+}
+
+function acceptItem (item) {
+  $q.dialog({
+    title: t('actions.accept'),
+    message: t('prompts.acceptItem', { item: item.data.title, name: item.creatorName }),
+    ok: {
+      label: t('labels.yes'),
+      flat: false
+    },
+    cancel: t('labels.no')
+  }).onOk(async () => {
+    loading.start(() => eventStore.acceptItem(item))
   })
 }
 </script>

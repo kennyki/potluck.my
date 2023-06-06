@@ -1,5 +1,6 @@
 export default {
   actions: {
+    accept: 'Accept',
     add: 'Add',
     cancel: 'Cancel',
     createEvent: 'Create event',
@@ -18,8 +19,7 @@ export default {
     requiresGuest: 'You already have a profile'
   },
   descriptions: {
-    maxLength: 'Max {n} characters',
-    rejected: 'Rejected by the host'
+    maxLength: 'Max {n} characters'
   },
   home: {
     tagline: 'Easy potluck organizing',
@@ -45,6 +45,7 @@ export default {
     yes: 'Yes'
   },
   prompts: {
+    acceptItem: 'Accept "{item}" added by {name}? This will show it in the list.',
     deleteItem: 'This will delete "{item}" permanently. Are you sure?',
     deleteProfile: 'This will delete your profile permanently. Are you sure?',
     rejectItem: 'Reject "{item}" added by {name}? This will hide it from the list.'
