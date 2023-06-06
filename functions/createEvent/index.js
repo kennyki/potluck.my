@@ -101,6 +101,13 @@ module.exports = async (req, res) => {
         'status',
         'key',
         ['status']
+      ),
+      databases.createIndex(
+        dbId,
+        eventId,
+        'statusAndType',
+        'key',
+        ['status', 'type']
       )
     ])
 

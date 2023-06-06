@@ -29,6 +29,7 @@ div(v-if='eventStore.isLoaded')
   .flex.justify-between.q-mt-xl.q-mb-sm
     h6.q-my-none {{ t('labels.itemTitle') }}
     q-btn(
+      v-if='isHost'
       flat
       no-caps
       color='grey-7'
@@ -111,7 +112,7 @@ div(v-if='eventStore.isLoaded')
 </template>
 
 <script setup>
-import { computed, ref, onMounted, onUnmounted } from 'vue'
+import { computed, ref, watch, onMounted, onUnmounted } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useEventStore, ItemStatus } from 'stores/event'
 import { useUserStore } from 'stores/user'
@@ -144,6 +145,11 @@ const items = computed(() => eventStore.items.filter(item => item.status === sta
 
 onMounted(() => loading.start(() => eventStore.load({ id: props.id })))
 onUnmounted(() => eventStore.unload())
+
+watch(status, (val) => {
+  // only load the intended items
+  loading.start(() => eventStore.loadItems({ id: props.id, status: status.value }))
+})
 
 function editEvent () {
   $q.dialog({

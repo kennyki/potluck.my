@@ -21,6 +21,11 @@ export const ItemStatus = {
   rejected: 'rejected'
 }
 
+export const ItemType = {
+  metadata: 'metadata',
+  item: 'item'
+}
+
 export const useEventStore = defineStore('event', {
   state: () => ({
     id: null,
@@ -65,7 +70,7 @@ export const useEventStore = defineStore('event', {
         this.id,
         ID.unique(),
         {
-          type: 'item',
+          type: ItemType.item,
           data: JSON.stringify({ title }),
           creatorId,
           creatorName: userStore.name
@@ -127,11 +132,11 @@ export const useEventStore = defineStore('event', {
         }
 
         switch (doc.type) {
-          case 'metadata':
+          case ItemType.metadata:
             // only take the first for metadata
             data.metadata ||= doc
             break
-          case 'item':
+          case ItemType.item:
             data.items.push(doc)
             break
         }
@@ -141,16 +146,40 @@ export const useEventStore = defineStore('event', {
 
       this.$patch(data)
     },
-    async _load ({ id, status }, page = 1) {
+    async loadItems ({ id, status }) {
+      const documents = await this._load({ id, status, type: ItemType.item })
+      const items = []
+
+      documents.forEach(doc => {
+        doc = this._parseDoc(doc)
+
+        if (doc) {
+          items.push(doc)
+        }
+      })
+
+      this.$patch({ items })
+    },
+    async _load ({ id, status, type }, page = 1) {
       const offset = (page - 1) * PAGE_LIMIT
+      const queries = [
+        Query.orderAsc('$createdAt'),
+        Query.limit(PAGE_LIMIT),
+        Query.offset(offset)
+      ]
+
+      if (status) {
+        queries.push(Query.equal('status', status))
+      }
+
+      if (type) {
+        queries.push(Query.equal('type', type))
+      }
+
       const { documents } = await databases.listDocuments(
         dbId,
         id,
-        [
-          Query.orderAsc('$createdAt'),
-          Query.limit(PAGE_LIMIT),
-          Query.offset(offset)
-        ]
+        queries
       )
 
       // try load the next page recursively
@@ -169,7 +198,7 @@ export const useEventStore = defineStore('event', {
 
         // ignore 'create' or 'delete'
         // which definitely is not a proper change (from the app UI)
-        if (type === 'metadata' && action === 'update') {
+        if (type === ItemType.metadata && action === 'update') {
           const updates = this._parseDoc(payload)
 
           if (updates) {
@@ -205,8 +234,17 @@ export const useEventStore = defineStore('event', {
 
       updates = this._parseDoc(updates)
 
-      if (doc && updates) {
+      if (!updates) {
+        return
+      }
+
+      if (doc) {
         Object.assign(doc, updates)
+      } else {
+        this[listName].push(doc)
+        this[listName].sort((a, b) => {
+          return a.$createdAt < b.$createdAt ? -1 : (a.$createdAt > b.$createdAt ? 1 : 0)
+        })
       }
     },
     _deleteDoc (listName, doc) {
