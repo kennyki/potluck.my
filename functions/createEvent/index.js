@@ -82,7 +82,7 @@ module.exports = async (req, res) => {
         STRING_SM,
         true
       ),
-      // ['active', 'hidden']
+      // ['active', 'rejected']
       databases.createStringAttribute(
         dbId,
         eventId,

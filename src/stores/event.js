@@ -88,6 +88,14 @@ export const useEventStore = defineStore('event', {
         item.$id
       )
     },
+    rejectItem (item) {
+      return databases.updateDocument(
+        dbId,
+        this.id,
+        item.$id,
+        { status: 'rejected' }
+      )
+    },
     async load ({ id, status = 'active' }) {
       // load everything
       const documents = await this._load({ id, status })
@@ -126,7 +134,6 @@ export const useEventStore = defineStore('event', {
         dbId,
         id,
         [
-          Query.equal('status', status),
           Query.orderAsc('$createdAt'),
           Query.limit(PAGE_LIMIT),
           Query.offset(offset)

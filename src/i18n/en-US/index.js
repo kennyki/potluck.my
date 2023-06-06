@@ -9,6 +9,7 @@ export default {
     dismiss: 'Dismiss',
     edit: 'Edit',
     getStarted: 'Get started',
+    reject: 'Reject',
     submit: 'Submit'
   },
   auth: {
@@ -17,7 +18,8 @@ export default {
     requiresGuest: 'You already have a profile'
   },
   descriptions: {
-    maxLength: 'Max {n} characters'
+    maxLength: 'Max {n} characters',
+    rejected: 'Rejected by the host'
   },
   home: {
     tagline: 'Easy potluck organizing',
@@ -44,7 +46,8 @@ export default {
   },
   prompts: {
     deleteItem: 'This will delete "{item}" permanently. Are you sure?',
-    deleteProfile: 'This will delete your profile permanently. Are you sure?'
+    deleteProfile: 'This will delete your profile permanently. Are you sure?',
+    rejectItem: 'Reject "{item}" added by {name}? This will hide it from the list.'
   },
   validations: {
     required: 'This field is required',
