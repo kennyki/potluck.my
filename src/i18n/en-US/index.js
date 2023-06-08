@@ -3,6 +3,7 @@ export default {
     accept: 'Accept',
     add: 'Add',
     cancel: 'Cancel',
+    copy: 'Copy',
     createEvent: 'Create event',
     createProfile: 'Create profile',
     delete: 'Delete',
@@ -35,13 +36,17 @@ export default {
   },
   labels: {
     content: 'Content',
+    copied: 'Copied',
     description: 'Description',
     event: 'Event',
+    html: 'HTML',
     itemTitle: 'To bring / To do',
+    link: 'Link',
     loading: 'Loading...',
     name: 'Name',
     no: 'No',
     notice: 'Notice',
+    whatsapp: 'WhatsApp',
     yes: 'Yes'
   },
   prompts: {

@@ -15,14 +15,22 @@ div(v-if='eventStore.isLoaded')
         .flex.items-center.text-caption.text-grey
           q-icon(name='person')
           .q-ml-xs {{ eventStore.metadata.creatorName }}
-        div(v-if='isHost')
+        div
           q-btn(
             round
             flat
-            icon='edit'
+            icon='share'
             size='sm'
-            @click='editEvent()'
+            @click='shareEvent()'
             )
+          template(v-if='isHost')
+            q-btn(
+              round
+              flat
+              icon='edit'
+              size='sm'
+              @click='editEvent()'
+              )
     template(v-if='eventStore.metadata.data.notice')
       q-separator
       q-card-section {{ eventStore.metadata.data.notice }}
@@ -119,6 +127,7 @@ import { useUserStore } from 'stores/user'
 import { useLoading } from 'composables/loading'
 import { useQuasar } from 'quasar'
 import EventEditDialog from 'components/EventEditDialog.vue'
+import EventSharingDialog from 'components/EventSharingDialog.vue'
 import ItemFormDialog from 'components/ItemFormDialog.vue'
 
 const $q = useQuasar()
@@ -150,6 +159,12 @@ watch(status, (val) => {
   // only load the intended items
   loading.start(() => eventStore.loadItems({ id: props.id, status: status.value }))
 })
+
+function shareEvent () {
+  $q.dialog({
+    component: EventSharingDialog
+  })
+}
 
 function editEvent () {
   $q.dialog({
