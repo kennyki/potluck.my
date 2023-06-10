@@ -35,17 +35,23 @@ export default {
     step4: 'Work out who\'s bringing or doing what'
   },
   labels: {
+    about: 'About',
+    backend: 'Backend',
     content: 'Content',
     copied: 'Copied',
+    credits: 'Credits',
     description: 'Description',
     event: 'Event',
+    frontend: 'Frontend',
     html: 'HTML',
     itemTitle: 'To bring / To do',
     link: 'Link',
     loading: 'Loading...',
+    logo: 'Logo',
     name: 'Name',
     no: 'No',
     notice: 'Notice',
+    privacy: 'Privacy',
     whatsapp: 'WhatsApp',
     yes: 'Yes'
   },

@@ -20,8 +20,32 @@ q-layout(view='hHh lpR fFf')
             UserDropdown
           router-view
       .col
+  q-footer.bg-white.text-grey-7(
+    reveal
+    bordered
+  )
+    q-toolbar.flex.justify-center
+      q-btn(
+        flat
+        no-caps
+        :label='t("labels.about")'
+      )
+      q-btn(
+        flat
+        no-caps
+        :label='t("labels.privacy")'
+      )
+      q-btn(
+        flat
+        no-caps
+        :label='t("labels.credits")'
+        :to='{ name: "credits" }'
+      )
 </template>
 
 <script setup>
+import { useI18n } from 'vue-i18n'
 import UserDropdown from 'components/UserDropdown.vue'
+
+const { t } = useI18n()
 </script>
