@@ -1,3 +1,5 @@
+import privacyPolicy from './privacyPolicy'
+
 export default {
   actions: {
     accept: 'Accept',
@@ -54,6 +56,10 @@ export default {
     privacy: 'Privacy',
     whatsapp: 'WhatsApp',
     yes: 'Yes'
+  },
+  privacyPolicy: {
+    title: 'Privacy Policy',
+    content: privacyPolicy
   },
   prompts: {
     acceptItem: 'Accept "{item}" added by {name}? This will show it in the list.',

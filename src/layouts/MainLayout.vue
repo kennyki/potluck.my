@@ -34,6 +34,7 @@ q-layout(view='hHh lpR fFf')
         flat
         no-caps
         :label='t("labels.privacy")'
+        :to='{ name: "privacy" }'
       )
       q-btn(
         flat

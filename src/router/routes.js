@@ -14,6 +14,11 @@ const routes = [
         component: () => import('pages/CreditsPage.vue')
       },
       {
+        name: 'privacy',
+        path: 'privacy',
+        component: () => import('pages/PrivacyPage.vue')
+      },
+      {
         name: 'login',
         path: 'profile',
         component: () => import('pages/LoginPage.vue'),
