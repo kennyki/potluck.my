@@ -4,8 +4,8 @@ q-card(
   bordered
   )
   q-card-section
-    h1.text-h5.text-center.q-mt-none.q-mb-sm {{ t('privacyPolicy.title') }}
-    .prose(v-html='t("privacyPolicy.content")')
+    h1.text-h5.text-center.q-mt-none.q-mb-sm {{ t('about.title') }}
+    .prose(v-html='t("about.content")')
 </template>
 
 <script setup>

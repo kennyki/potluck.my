@@ -1,6 +1,11 @@
+import about from './about'
 import privacyPolicy from './privacyPolicy'
 
 export default {
+  about: {
+    title: 'About Potluck.my',
+    content: about
+  },
   actions: {
     accept: 'Accept',
     add: 'Add',

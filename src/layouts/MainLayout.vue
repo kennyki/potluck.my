@@ -29,6 +29,7 @@ q-layout(view='hHh lpR fFf')
         flat
         no-caps
         :label='t("labels.about")'
+        :to='{ name: "about" }'
       )
       q-btn(
         flat
