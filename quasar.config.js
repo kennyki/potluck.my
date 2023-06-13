@@ -11,7 +11,7 @@
 const { configure } = require('quasar/wrappers')
 const path = require('path')
 
-module.exports = configure(function (/* ctx */) {
+module.exports = configure(function (ctx) {
   require('dotenv').config()
 
   return {
@@ -98,7 +98,7 @@ module.exports = configure(function (/* ctx */) {
 
           // if you want to use named tokens in your Vue I18n messages, such as 'Hello {name}',
           // you need to set `runtimeOnly: false`
-          // runtimeOnly: false,
+          runtimeOnly: ctx.dev,
 
           // you need to set i18n resource including paths !
           include: path.resolve(__dirname, './src/i18n/**')
