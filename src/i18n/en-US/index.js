@@ -27,7 +27,8 @@ export default {
     requiresGuest: 'You already have a profile'
   },
   descriptions: {
-    maxLength: 'Max {n} characters'
+    maxLength: 'Max {n} characters',
+    profile: 'Note: Your profile is only stored in this browser.'
   },
   home: {
     tagline: 'Easy potluck organizing',

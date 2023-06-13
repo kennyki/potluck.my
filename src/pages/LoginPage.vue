@@ -5,6 +5,7 @@ q-card(
   )
   q-card-section
     h1.text-h5.text-center.q-mt-none.q-mb-lg {{ t('actions.createProfile') }}
+    q-banner.bg-amber-1.q-mb-lg {{ t('descriptions.profile') }}
     q-form.q-gutter-sm(@submit='onSubmit()')
       q-input(
         v-model='state.name'
