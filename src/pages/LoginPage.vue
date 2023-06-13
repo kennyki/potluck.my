@@ -32,6 +32,7 @@ q-card(
 
 <script setup>
 import { reactive } from 'vue'
+import { useMeta } from 'quasar'
 import { useRouter } from 'vue-router'
 import { useLoading } from 'composables/loading'
 import { useUserStore } from 'stores/user'
@@ -44,6 +45,10 @@ const { t } = useI18n()
 const router = useRouter()
 const loading = useLoading()
 const userStore = useUserStore()
+
+useMeta({
+  title: t('actions.createProfile')
+})
 
 const props = defineProps({
   redirect: {

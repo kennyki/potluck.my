@@ -12,6 +12,7 @@ q-card(
 </template>
 
 <script setup>
+import { useMeta } from 'quasar'
 import { useI18n } from 'vue-i18n'
 import { useEventStore } from 'stores/event'
 import { useLoading } from 'composables/loading'
@@ -22,6 +23,10 @@ const { t } = useI18n()
 const eventStore = useEventStore()
 const loading = useLoading()
 const router = useRouter()
+
+useMeta({
+  title: t('actions.createEvent')
+})
 
 async function onSubmit (params) {
   const id = await loading.start(() => eventStore.create(params))

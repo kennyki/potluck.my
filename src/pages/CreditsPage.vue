@@ -29,7 +29,12 @@ q-card(
 </template>
 
 <script setup>
+import { useMeta } from 'quasar'
 import { useI18n } from 'vue-i18n'
 
 const { t } = useI18n()
+
+useMeta({
+  title: t('labels.credits')
+})
 </script>

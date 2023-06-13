@@ -125,7 +125,7 @@ import { useI18n } from 'vue-i18n'
 import { useEventStore, ItemStatus } from 'stores/event'
 import { useUserStore } from 'stores/user'
 import { useLoading } from 'composables/loading'
-import { useQuasar } from 'quasar'
+import { useQuasar, useMeta } from 'quasar'
 import EventEditDialog from 'components/EventEditDialog.vue'
 import EventSharingDialog from 'components/EventSharingDialog.vue'
 import ItemFormDialog from 'components/ItemFormDialog.vue'
@@ -135,6 +135,12 @@ const { t } = useI18n()
 const eventStore = useEventStore()
 const userStore = useUserStore()
 const loading = useLoading()
+
+useMeta(() => {
+  return {
+    title: eventStore.isLoaded ? eventStore.metadata.data.name : t('labels.event')
+  }
+})
 
 const props = defineProps({
   id: {

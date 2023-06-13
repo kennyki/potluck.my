@@ -130,7 +130,8 @@ module.exports = configure(function (ctx) {
       plugins: [
         'Dialog',
         'Loading',
-        'Notify'
+        'Notify',
+        'Meta'
       ]
     },
 
