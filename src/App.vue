@@ -2,10 +2,10 @@
   <router-view />
 </template>
 
-<script>
-import { defineComponent } from 'vue'
+<script setup>
+const initLoading = document.querySelector('#init-loading')
 
-export default defineComponent({
-  name: 'App'
-})
+if (initLoading) {
+  initLoading.remove()
+}
 </script>
