@@ -28,80 +28,95 @@ export const ItemType = {
 
 export const useEventStore = defineStore('event', {
   state: () => ({
-    id: null,
     metadata: null,
     items: [],
-    unsubscribeToEvent: null
+    unsubscribeToMetadata: null,
+    unsubscribeToItems: null
   }),
   getters: {
+    id (state) {
+      return state.metadata?.id
+    },
     isLoaded (state) {
-      return !!state.id
+      return !!this.id
     }
   },
   actions: {
-    create ({ name, notice }) {
-      const userStore = useUserStore()
-      const params = JSON.stringify({
-        name,
-        notice,
-        hostId: userStore.id,
-        hostName: userStore.name
-      })
-
-      return functions.createExecution('createEvent', params)
-    },
-    updateMetadata ({ name, notice }) {
-      const data = Object.assign({ ...this.metadata.data }, { name, notice })
+    async create ({ name, notice }) {
+      // TODO: transaction
+      const event = await databases.createDocument(
+        dbId,
+        'events',
+        ID.unique(),
+        { name, notice }
+      )
+      const eventId = event.$id
+      const team = await teams.create(
+        eventId,
+        eventId,
+        ['owner']
+      )
+      const teamId = team.$id
 
       return databases.updateDocument(
         dbId,
+        'events',
+        eventId,
+        {},
+        [
+          Permission.read(Role.team(teamId)),
+          Permission.update(Role.team(teamId, 'owner'))
+        ]
+      )
+    },
+    updateMetadata ({ name, notice }) {
+      return databases.updateDocument(
+        dbId,
+        'events',
         this.id,
-        this.metadata.$id,
-        { data: JSON.stringify(data) }
+        { name, notice }
       )
     },
     createItem ({ title }) {
       const userStore = useUserStore()
       const creatorId = userStore.id
-      const hostId = this.metadata.creatorId
+      const eventId = this.id
 
       return databases.createDocument(
         dbId,
-        this.id,
+        'items',
         ID.unique(),
         {
-          type: ItemType.item,
-          data: JSON.stringify({ title }),
+          title,
           creatorId,
-          creatorName: userStore.name
+          eventId
         },
         [
-          Permission.update(Role.user(creatorId)),
+          Permission.update(Role.team(eventId, 'owner')),
+          Permission.delete(Role.team(eventId, 'owner')),
           Permission.delete(Role.user(creatorId))
         ]
       )
     },
     updateItem (item, { title }) {
-      const data = Object.assign({ ...item.data }, { title })
-
       return databases.updateDocument(
         dbId,
-        this.id,
+        'items',
         item.$id,
-        { data: JSON.stringify(data) }
+        { title }
       )
     },
     deleteItem (item) {
       return databases.deleteDocument(
         dbId,
-        this.id,
+        'items',
         item.$id
       )
     },
     rejectItem (item) {
       return databases.updateDocument(
         dbId,
-        this.id,
+        'items',
         item.$id,
         { status: ItemStatus.rejected }
       )
@@ -109,58 +124,42 @@ export const useEventStore = defineStore('event', {
     acceptItem (item) {
       return databases.updateDocument(
         dbId,
-        this.id,
+        'items',
         item.$id,
         { status: ItemStatus.active }
       )
     },
     async load ({ id, status = ItemStatus.active }) {
-      // load everything
-      const documents = await this._load({ id, status })
-      const data = {
+      const userStore = useUserStore()
+      const userId = userStore.id
+      const params = JSON.stringify({
         id,
-        metadata: null,
-        items: [],
-        unsubscribeToEvent: null
-      }
-
-      documents.forEach(doc => {
-        doc = this._parseDoc(doc)
-
-        if (!doc) {
-          return
-        }
-
-        switch (doc.type) {
-          case ItemType.metadata:
-            // only take the first for metadata
-            data.metadata ||= doc
-            break
-          case ItemType.item:
-            data.items.push(doc)
-            break
-        }
+        userId
       })
 
-      data.unsubscribeToEvent = this._subscribeToEvent(id)
+      await functions.createExecution('ensureEventMembership', params)
 
-      this.$patch(data)
+      const metadata = await databases.getDocument(
+        dbId,
+        'events',
+        id
+      )
+
+      this.$patch({
+        metadata,
+        items: [],
+        unsubscribeToMetadata: this._subscribeToMetadata(id),
+        unsubscribeToItems: this._subscribeToItems(id)
+      })
+
+      return this.loadItems({ id, status })
     },
     async loadItems ({ id, status }) {
-      const documents = await this._load({ id, status, type: ItemType.item })
-      const items = []
-
-      documents.forEach(doc => {
-        doc = this._parseDoc(doc)
-
-        if (doc) {
-          items.push(doc)
-        }
-      })
+      const items = await this._loadItems({ id, status })
 
       this.$patch({ items })
     },
-    async _load ({ id, status, type }, page = 1) {
+    async _loadItems ({ id, status }, page = 1) {
       const offset = (page - 1) * PAGE_LIMIT
       const queries = [
         Query.orderAsc('$createdAt'),
@@ -170,10 +169,6 @@ export const useEventStore = defineStore('event', {
 
       if (status) {
         queries.push(Query.equal('status', status))
-      }
-
-      if (type) {
-        queries.push(Query.equal('type', type))
       }
 
       const { documents } = await databases.listDocuments(
@@ -190,82 +185,64 @@ export const useEventStore = defineStore('event', {
 
       return documents
     },
-    _subscribeToEvent (id) {
-      return client.subscribe(`databases.${dbId}.collections.${id}.documents`, async (data) => {
+    _subscribeToMetadata (id) {
+      return client.subscribe(`databases.${dbId}.collections.events.documents.${id}`, (data) => {
         const { events, payload } = data
         const action = events[0]?.split('.').pop()
-        const type = payload.type
 
-        // ignore 'create' or 'delete'
-        // which definitely is not a proper change (from the app UI)
-        if (type === ItemType.metadata && action === 'update') {
-          const updates = this._parseDoc(payload)
-
-          if (updates) {
-            Object.assign(this.metadata, updates)
-          }
-
-          return
-        }
-
-        const listName = `${type}s`
-
-        if (!this[listName]) {
-          return console.warn(`Invalid event data type: ${type}`)
-        }
-
-        const handler = this[`_${action}Doc`]
-
-        if (handler) {
-          handler.call(this, listName, payload)
+        if (action === 'update') {
+          this.$patch({
+            metadata: payload
+          })
         }
       })
     },
-    _createDoc (listName, doc) {
-      doc = this._parseDoc(doc)
+    _subscribeToItems (id) {
+      return client.subscribe(`databases.${dbId}.collections.items.documents`, async (data) => {
+        const { events, payload } = data
+        const action = events[0]?.split('.').pop()
+        const handler = this[`_${action}Item`]
 
-      if (doc && doc.status === ItemStatus.active) {
-        this[listName].push(doc)
+        if (handler && payload.eventId === id) {
+          handler.call(this, payload)
+        }
+      })
+    },
+    _createItem (item) {
+      if (item.status === ItemStatus.active) {
+        this.items.push(item)
       }
     },
-    _updateDoc (listName, updates) {
+    _updateItem (updates) {
       const id = updates.$id
-      const doc = this[listName].find(doc => doc.$id === id)
+      const item = this.items.find(item => item.$id === id)
 
-      updates = this._parseDoc(updates)
-
-      if (!updates) {
-        return
+      if (updates.status !== ItemStatus.active) {
+        return this._deleteItem(updates)
       }
 
-      if (doc) {
-        Object.assign(doc, updates)
+      if (item) {
+        Object.assign(item, updates)
       } else {
-        this[listName].push(doc)
-        this[listName].sort((a, b) => {
+        this.items.push(updates)
+        this.items.sort((a, b) => {
           return a.$createdAt < b.$createdAt ? -1 : (a.$createdAt > b.$createdAt ? 1 : 0)
         })
       }
     },
-    _deleteDoc (listName, doc) {
-      const id = doc.$id
+    _deleteItem (item) {
+      const id = item.$id
 
       this.$patch({
-        [listName]: this[listName].filter(doc => doc.$id !== id)
+        items: this.items.filter(item => item.$id !== id)
       })
     },
-    _parseDoc (doc) {
-      try {
-        doc.data = JSON.parse(doc.data)
-        return doc
-      } catch (error) {
-        console.error(`Found corrupted data on ${doc.$id}`)
-        console.error(error)
-      }
-    },
     unload () {
-      if (this.unsubscribeToEvent) {
-        this.unsubscribeToEvent()
+      if (this.unsubscribeToMetadata) {
+        this.unsubscribeToMetadata()
+      }
+      if (this.unsubscribeToItems) {
+        this.unsubscribeToItems()
       }
       this.$reset()
     }
