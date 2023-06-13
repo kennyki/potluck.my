@@ -62,7 +62,7 @@ const v = useVuelidate(rules, state, {
 })
 
 async function onSubmit () {
-  const valid = await this.v.$validate()
+  const valid = await v.value.$validate()
 
   if (!valid) {
     return
